@@ -1,0 +1,9 @@
+pwd = project root
+
+docker run -d --name exam1_server --network exam1 -p 8080:80 -v $(pwd):/var/www/html baalvi/gimcana:latest
+
+docker run -d --name exam1_mysql --network exam1 -p 3306:3306 -e MYSQL_DATABASE=exam1 -e MYSQL_USER=admin -e MYSQL_PASSWORD=password -e MYSQL_ROOT_PASSWORD=password mysql:latest
+
+docker run -d --name exam1_phpmyadmin --network exam1 -e PMA_HOST=exam1_mysql -e PMA_USER=admin -e PMA_PASSWORD=password -p 8081:80 phpmyadmin:latest
+
+docker exec -it exam1_mysql mysql -uadmin -ppassword
