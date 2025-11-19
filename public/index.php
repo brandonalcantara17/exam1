@@ -7,6 +7,13 @@ session_start();
 include "../src/config.php";
 include "../src/controllers/ctrlHome.php";
 include "../src/controllers/ctrlResult.php";
+include "../src/controllers/ctrlCookie.php";
+include "../src/controllers/ctrlAfegir.php";
+include "../src/controllers/ctrlLlista.php";
+include "../src/controllers/ctrlSorteig.php";
+include "../src/controllers/ctrlDoAfegir.php";
+include "../src/controllers/ctrlDoSorteig.php";
+
 
 /**
  * Carreguem les classes del Framework Emeset
@@ -22,6 +29,8 @@ include "../src/Container.php";
  */
 include "../src/Models/Db.php";
 include "../src/Models/ExampleModel.php";
+include "../src/Models/ProductsModel.php";
+include "../src/Models/CategoriesModel.php";
 
 $request = new \Emeset\Request();
 $response = new \Emeset\Response();
@@ -40,8 +49,22 @@ if (isset($_REQUEST["r"])) {
 
 /* Front Controller, aquí es decideix quina acció s'executa */
 
-if ($r == "" || $r == "home") {
+if ($r == "") {
+    $response = ctrlCookie($request, $response, $container);
+} elseif ($r == "home") {
     $response = ctrlHome($request, $response, $container);
+} elseif ($r == "afegir") {
+    $response = ctrlAfegir($request, $response, $container);
+} elseif ($r == "llista") {
+    $response = ctrlLlista($request, $response, $container);
+}
+// elseif ($r == "sorteig") {
+//     $response = ctrlSorteig($request, $response, $container);
+// } 
+elseif ($r == "doAfegir") {
+    $response = ctrlDoAfegir($request, $response, $container);
+} elseif ($r == "doSorteig") {
+    $response = ctrlDoSorteig($request, $response, $container);
 } elseif ($r == "result") {
     $response = ctrlResult($request, $response, $container);
 } else {

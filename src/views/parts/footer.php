@@ -1,9 +1,13 @@
-<div class="container">
-    <div class="row">
-        <div class="col-12 text-center">
-            <p class="mb-0">
-                <strong>Brandon Albert Reyes Alcantara</strong>
-            </p>
+<footer class="bg-dark text-light mt-auto py-4">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="mb-0">
+                    <strong>Brandon Albert Reyes Alcantara</strong>
+                </p>
+            </div>
         </div>
     </div>
-</div>
+
+</footer>

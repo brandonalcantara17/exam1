@@ -1,15 +1,51 @@
 <?php
-
 namespace Models;
 
-class ExampleModel
+class PoductsModels
 {
-
     private $db;
 
     public function __construct($db)
     {
         $this->db = $db->getDb();
+    }
+
+    /**
+     * taula productes
+     *
+     * @param array $data [
+     *   'name' => string,
+     *   'category_id' => int,
+     *   'short_description' => string,
+     *   'producer' => string,
+     *   'contact_email' => string,
+     *   'price' => float
+     * ]
+     * @return array ['success' => bool, 'error' => string|null]
+     */
+    public function insertProduct($data)
+    {
+        $required = ['name', 'category_id', 'short_description', 'producer', 'contact_email', 'price'];
+        foreach ($required as $field) {
+            if (!isset($data[$field]) || $data[$field] === '') {
+                return ['success' => false, 'error' => "Field '$field' is required."];
+            }
+        }
+
+        $columns = ['name', 'category_id', 'short_description', 'producer', 'contact_email', 'price'];
+        $placeholders = array_map(fn($k) => ":$k", $columns);
+        $sql = "INSERT INTO products (" . implode(", ", $columns) . ") VALUES (" . implode(", ", $placeholders) . ")";
+        $stmt = $this->db->prepare($sql);
+        $params = [];
+        foreach ($columns as $col) {
+            $params[":$col"] = $data[$col];
+        }
+        try {
+            $result = $stmt->execute($params);
+            return $result ? ['success' => true] : ['success' => false, 'error' => 'Unknown error'];
+        } catch (\PDOException $e) {
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 
     public function selectAllFrom($table)
@@ -18,7 +54,6 @@ class ExampleModel
         $stmt->execute();
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
-
 
     public function insert($table, $data)
     {
@@ -33,7 +68,6 @@ class ExampleModel
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-
 
     public function updateById($table, $id, $data, $idColumn = 'id')
     {
@@ -54,7 +88,6 @@ class ExampleModel
         }
     }
 
-
     public function deleteById($table, $id, $idColumn = 'id')
     {
         $sql = "DELETE FROM $table WHERE $idColumn = :id";
@@ -66,43 +99,4 @@ class ExampleModel
             return ['success' => false, 'error' => $e->getMessage()];
         }
     }
-
-    public function addProduct($nom, $preu, $categoria, $data_hora, $productor, $correu)
-    {
-
-
-        $query = 'insert into Gimcana (Nom, Preu, Categoria, DataHora, Productor, Correu) VALUES (:Nom, :Preu, :Categoria, :DataHora, :Productor, :Correu)';
-        $stm = $this->db->prepare($query);
-        try {
-            return $stm->execute([
-                ':Nom' => $nom,
-                ':Preu' => $preu,
-                ':Categoria' => $categoria,
-                ':DataHora' => $data_hora,
-                ':Productor' => $productor,
-                ':Correu' => $correu
-            ]);
-        } catch (\PDOException $e) {
-            return false;
-        }
-    }
-
-    public function getCategCount()
-    {
-        $sql = "select count(*) as count from categories";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
-
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return $result['count'];
-    }
-    public function selectAllProductes()
-    {
-        $stmt = $this->db->prepare("SELECT * FROM productes ORDER by data_hora ASc");
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-
-
 }

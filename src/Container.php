@@ -20,6 +20,17 @@ class Container extends \Emeset\Container
         return new \Models\ExampleModel($this->db);
     }
 
+    // public function Products()
+    // {
+    //     return new \Models\ProductsModel($this->db);
+    // }
+
+    // public function Categories()
+    // {
+    //     return new \Models\CategoriesModel($this->db);
+    // }
+
+
     public function Db()
     {
         return new \Models\Db(
